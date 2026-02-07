@@ -5,6 +5,9 @@ public class Game
     private Direction CurrentDirection { get; set; }
     private long GameSleepInterval { get; set; }
     private int Score { get; set; }
+    private Point Food { get; set; }
+    private int Height { get; set; } = 50;
+    private int Width { get; set; } = 50;
 
     private List<Point> _snake = new()
     {
@@ -44,7 +47,24 @@ public class Game
         };
 
         _snake.Insert(0, newHead);
+        
+        if (newHead.X == Food.X && newHead.Y == Food.Y)
+        {
+            Score++;
+            SpawnFood();
+            return;
+        }
+        
         if(_snake.Count > 1) _snake.RemoveAt(_snake.Count - 1);
+    }
+
+    private void SpawnFood()
+    {
+        Random random = new();
+        Food = new Point(
+                random.Next(1, Width - 1),
+                random.Next(1,  Height - 1)
+            );
     }
     
     private void HandleInput()
