@@ -23,13 +23,44 @@ public class Game
 
     public void Start()
     {
-            
+        SpawnFood();
     }
 
     private void GameLoop()
     {
         HandleInput();
         UpdateMovement();
+        Draw();
+    }
+
+    private void Draw()
+    {
+        Console.Clear();
+        
+        for (int x = 0; x < Width; x++)
+        {
+            Console.SetCursorPosition(x, 0);
+            Console.Write("#");
+            Console.SetCursorPosition(x, Height - 1);
+            Console.Write("#");
+        }
+
+        for (int y = 0; y < Height; y++)
+        {
+            Console.SetCursorPosition(0, y);
+            Console.Write("#");
+            Console.SetCursorPosition(Width - 1, y);
+            Console.Write("#");
+        }
+        
+        foreach (var part in _snake)
+        {
+            Console.SetCursorPosition(part.X, part.Y);
+            Console.Write("O");
+        }
+        
+        Console.SetCursorPosition(Food.X, Food.Y);
+        Console.Write("X");
     }
     
     private void UpdateMovement()
