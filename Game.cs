@@ -3,18 +3,19 @@
 public class Game
 {
     private Direction CurrentDirection { get; set; }
-    private long GameSleepInterval { get; set; }
+    private int GameSleepInterval { get; set; }
     private int Score { get; set; }
     private Point Food { get; set; }
-    private int Height { get; set; } = 50;
-    private int Width { get; set; } = 50;
+    private int Height { get; set; } = 10;
+    private int Width { get; set; } = 30;
+    private bool _gameOver = false;
 
     private List<Point> _snake = new()
     {
         new Point(3, 3)
     };
     
-    public Game(Direction direction, long gameSleepInterval)
+    public Game(Direction direction, int gameSleepInterval)
     {
         CurrentDirection = direction;
         GameSleepInterval = gameSleepInterval;
@@ -24,15 +25,28 @@ public class Game
     public void Start()
     {
         SpawnFood();
+        GameLoop();
     }
 
     private void GameLoop()
     {
-        HandleInput();
-        UpdateMovement();
-        Draw();
+        while (!_gameOver)
+        {
+            HandleInput();
+            UpdateMovement();
+            Draw();
+            
+            Thread.Sleep(GameSleepInterval);
+        }
+        GameOverScreen();
     }
 
+    private void GameOverScreen()
+    {
+        Console.Clear();
+        Console.WriteLine($"Game over, score: {Score}");
+    }
+    
     private void Draw()
     {
         Console.Clear();
@@ -85,7 +99,14 @@ public class Game
             SpawnFood();
             return;
         }
-        
+        if (newHead.X <= 0 || newHead.X >= Width - 1 ||
+            newHead.Y <= 0 || newHead.Y >= Height - 1 || 
+            _snake.Skip(1).Any(p => p.X == newHead.X && p.Y == newHead.Y))
+        {
+            _gameOver = true;
+            return;
+        }
+
         if(_snake.Count > 1) _snake.RemoveAt(_snake.Count - 1);
     }
 
