@@ -4,6 +4,8 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        Console.CursorVisible = false;
+        var game = new Game(Direction.Right, 100);
+        game.Start();
     }
 }
